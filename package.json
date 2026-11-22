@@ -1,0 +1,36 @@
+{
+  "name": "embedmaster",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "EmbedMaster 嵌入式学习平台 Web 前端原型",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit",
+    "clean:dist": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true});console.log('dist 已清空')\""
+  },
+  "dependencies": {
+    "@capacitor/app": "^6.0.3",
+    "@capacitor/core": "^6.2.3",
+    "@vscode/markdown-it-katex": "^1.1.1",
+    "katex": "^0.16.11",
+    "konva": "^9.3.18",
+    "markdown-it": "^14.1.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "puppeteer-core": "^25.18.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vue-tsc": "^2.2.0"
+  }
+}

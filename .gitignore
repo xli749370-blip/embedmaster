@@ -1,0 +1,45 @@
+# ---------- 依赖与构建产物 ----------
+node_modules/
+dist/
+dist-*/
+.tmpbuild/
+.tmp-listen/
+.tmp-transcode/
+.tmp-qcheck*.mjs
+.tts-tmp/
+.ttscheck/
+.tts-verified.*
+.audio-stash/
+.apk-stash/
+.apk-site-stash/
+
+# ---------- 音频 ----------
+# 全站约 340 段、176MB 的语音，由 scripts/audio 下的脚本用 edge-tts 生成，
+# 属于「派生数据」且体积过大，不入库。生成方法见 README「音频」一节。
+public/audio/
+
+# ---------- 移动端 ----------
+# APK 单文件 180MB+，超过 GitHub 100MB 单文件上限；构建方法见 README
+*.apk
+*.aab
+*.jks
+*.keystore
+android/
+ios/
+
+# ---------- 本地验证 / 调试产物 ----------
+shot-*.png
+hd-*.png
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# ---------- 本地环境 ----------
+.env
+.env.*
+*.local
+
+# 历史部署快照（160MB，含旧 APK 与音频），不入库
+/site/

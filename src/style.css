@@ -1,0 +1,578 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============ 基础层 ============ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* 标准 App 手感：禁掉双击缩放与橡皮筋回弹 */
+    touch-action: manipulation;
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    @apply bg-page text-ink-800 font-sans antialiased;
+    /* 顶部一层极淡的工程网格纹理，强化「嵌入式」气质 */
+    background-image:
+      radial-gradient(circle at 12% -10%, rgba(58, 104, 247, 0.1), transparent 45%),
+      radial-gradient(circle at 88% 0%, rgba(6, 182, 212, 0.09), transparent 40%);
+    background-repeat: no-repeat;
+    /* App 化：界面文字不触发长按选中（讲义代码块单独放开） */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 正文与代码仍可选中复制（学习场景刚需） */
+  .md-body,
+  .md-body pre,
+  .md-body code,
+  input,
+  textarea,
+  select {
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+
+  /* 滚动条（桌面端） */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.brand.500');
+    outline-offset: 2px;
+  }
+}
+
+/* ============ 复用组件层 ============ */
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+      transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-[0_8px_20px_-8px_rgba(37,73,235,.7)]
+      hover:bg-brand-700 hover:shadow-[0_12px_28px_-10px_rgba(37,73,235,.75)] active:translate-y-px;
+  }
+  .btn-ghost {
+    @apply btn border border-slate-200 bg-white text-ink-700 hover:border-slate-300 hover:bg-slate-50;
+  }
+  .btn-soft {
+    @apply btn bg-brand-50 text-brand-700 hover:bg-brand-100;
+  }
+  .btn-sm {
+    @apply rounded-lg px-3 py-1.5 text-xs;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80
+      px-3 py-1 text-xs font-medium text-ink-500;
+  }
+
+  .tag {
+    @apply inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-semibold tracking-wide;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-ink-800
+      placeholder:text-slate-400 focus:border-brand-400 focus:outline-none
+      focus:ring-4 focus:ring-brand-500/10;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ink-400;
+  }
+
+  .link-underline {
+    @apply relative text-brand-700 after:absolute after:-bottom-0.5 after:left-0 after:h-px
+      after:w-0 after:bg-brand-600 after:transition-all hover:after:w-full;
+  }
+}
+
+/* ============ Markdown 讲义排版 ============ */
+.md-body {
+  @apply text-[15px] leading-[1.85] text-ink-700;
+  word-break: break-word;
+}
+.md-body > *:first-child {
+  margin-top: 0;
+}
+.md-body h1 {
+  @apply mb-4 mt-10 text-2xl font-bold tracking-tight text-ink-900;
+}
+.md-body h2 {
+  @apply mb-3 mt-9 border-l-4 border-brand-500 pl-3 text-xl font-bold tracking-tight text-ink-900;
+}
+.md-body h3 {
+  @apply mb-2 mt-7 text-base font-bold text-ink-900;
+}
+.md-body h4 {
+  @apply mb-2 mt-6 text-sm font-bold text-ink-800;
+}
+.md-body p {
+  @apply my-3.5;
+}
+.md-body strong {
+  @apply font-semibold text-ink-900;
+}
+.md-body em {
+  @apply text-brand-700 not-italic;
+}
+.md-body ul {
+  @apply my-3.5 list-disc space-y-1.5 pl-5 marker:text-brand-400;
+}
+.md-body ol {
+  @apply my-3.5 list-decimal space-y-1.5 pl-5 marker:font-semibold marker:text-brand-500;
+}
+.md-body li > ul,
+.md-body li > ol {
+  @apply my-1.5;
+}
+.md-body a {
+  @apply font-medium text-brand-700 underline decoration-brand-300 decoration-1 underline-offset-2
+    hover:decoration-brand-600;
+}
+.md-body blockquote {
+  @apply my-5 rounded-r-xl border-l-4 border-accent-500 bg-accent-500/[0.06] px-4 py-3 text-ink-600;
+}
+.md-body blockquote p {
+  @apply my-1;
+}
+.md-body code {
+  @apply rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[13px] text-brand-800;
+}
+.md-body pre {
+  @apply my-5 overflow-x-auto rounded-2xl bg-ink-900 p-4 text-[13px] leading-relaxed text-slate-100;
+}
+/* 带工具条的代码块：fence 渲染器产出，复制按钮由讲义页事件委托实现 */
+.md-code {
+  @apply my-5 overflow-hidden rounded-2xl bg-ink-900;
+}
+.md-code-bar {
+  @apply flex items-center justify-between border-b border-white/10 px-4 py-1.5;
+}
+.md-code-lang {
+  @apply font-mono text-[10.5px] font-bold uppercase tracking-wider text-slate-400;
+}
+.md-code-copy {
+  @apply cursor-pointer rounded-md px-2 py-0.5 text-[11px] font-semibold text-slate-300 transition
+    hover:bg-white/10 hover:text-white active:scale-95;
+}
+.md-code pre {
+  @apply m-0 rounded-none p-4;
+}
+.md-body pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+.md-body table {
+  @apply my-5 w-full border-collapse overflow-hidden rounded-xl text-sm;
+}
+.md-body thead th {
+  @apply border-b border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-xs font-semibold
+    uppercase tracking-wider text-ink-500;
+}
+.md-body tbody td {
+  @apply border-b border-slate-100 px-3 py-2.5 align-top;
+}
+.md-body tbody tr:last-child td {
+  @apply border-b-0;
+}
+.md-body tbody tr:hover {
+  @apply bg-slate-50/70;
+}
+.md-body hr {
+  @apply my-8 border-dashed border-slate-200;
+}
+.md-body img {
+  @apply my-5 rounded-xl border border-slate-200;
+}
+.md-body .katex {
+  @apply text-[1.02em];
+}
+.md-body .katex-display {
+  @apply my-5 overflow-x-auto overflow-y-hidden py-1;
+}
+/* 自定义callout：::: note 之类的简写不支持，用引用+emoji替代 */
+.md-body .callout-tip {
+  @apply my-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900;
+}
+
+/* 窄屏下表格改为横向滚动，避免列被压扁 */
+@media (max-width: 640px) {
+  .md-body table {
+    display: block;
+    overflow-x: auto;
+  }
+  .md-body thead th,
+  .md-body tbody td {
+    white-space: nowrap;
+  }
+}
+
+/* Konva 画布容器不允许文本选中拖拽 */
+.konva-wrap canvas {
+  touch-action: manipulation;
+}
+
+/* ============ 深色模式 ============ */
+/* ------------------------------------------------------------------
+ * 策略：html.dark 下用更高优先级的规则覆盖亮色工具类与组件类。
+ * 讲义页内嵌的 Konva 动画容器（.anim-panel）整体豁免 —— 画布颜色是
+ * 绘制时写死的，无法随主题翻转，因此动画保持亮色「仪表盘」外观。
+ * :not(.anim-panel *) 为现代浏览器写法（Chrome 88+ / Safari 14+）。
+ * ------------------------------------------------------------------ */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #0b101e;
+  background-image:
+    radial-gradient(circle at 12% -10%, rgba(58, 104, 247, 0.14), transparent 45%),
+    radial-gradient(circle at 88% 0%, rgba(6, 182, 212, 0.1), transparent 40%);
+  color: #c6d0e2;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #2a3752;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3a4a6d;
+  background-clip: content-box;
+}
+
+/* ---- 组件类 ---- */
+html.dark .card {
+  background-color: #10182c;
+  border-color: #24304a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+}
+html.dark .btn-ghost {
+  background-color: transparent;
+  border-color: #2a3752;
+  color: #c6d0e2;
+}
+html.dark .btn-ghost:hover {
+  background-color: #182136;
+  border-color: #3a4a6d;
+}
+html.dark .btn-soft {
+  background-color: rgba(58, 104, 247, 0.16);
+  color: #8fadff;
+}
+html.dark .btn-soft:hover {
+  background-color: rgba(58, 104, 247, 0.28);
+}
+html.dark .chip {
+  background-color: rgba(16, 24, 44, 0.8);
+  border-color: #24304a;
+  color: #8d99b0;
+}
+html.dark .field {
+  background-color: #0d1425;
+  border-color: #24304a;
+  color: #dbe2f0;
+}
+html.dark .field::placeholder {
+  color: #4d5a75;
+}
+html.dark .link-underline {
+  color: #8fadff;
+}
+
+/* ---- 表面 ---- */
+html.dark .bg-white:not(.anim-panel *) { background-color: #10182c; }
+html.dark .bg-white\/85:not(.anim-panel *), html.dark .bg-white\/60:not(.anim-panel *) { background-color: rgba(13, 20, 37, 0.85); }
+html.dark .bg-slate-50:not(.anim-panel *) { background-color: #0d1425; }
+html.dark .bg-slate-50\/60:not(.anim-panel *), html.dark .bg-slate-50\/70:not(.anim-panel *), html.dark .bg-slate-50\/80:not(.anim-panel *) { background-color: rgba(13, 20, 37, 0.7); }
+html.dark .bg-slate-100:not(.anim-panel *) { background-color: #1a2338; }
+html.dark .bg-slate-100\/60:not(.anim-panel *), html.dark .bg-slate-100\/70:not(.anim-panel *) { background-color: rgba(26, 35, 56, 0.6); }
+html.dark .bg-slate-200:not(.anim-panel *) { background-color: #232e47; }
+html.dark .bg-page:not(.anim-panel *) { background-color: #0b101e; }
+
+/* ---- 文本 ---- */
+html.dark .text-ink-900:not(.anim-panel *) { color: #e8edf8; }
+html.dark .text-ink-800:not(.anim-panel *) { color: #dbe2f0; }
+html.dark .text-ink-700:not(.anim-panel *) { color: #c6d0e2; }
+html.dark .text-ink-600:not(.anim-panel *) { color: #a9b4c9; }
+html.dark .text-ink-500:not(.anim-panel *) { color: #8d99b0; }
+html.dark .text-ink-400:not(.anim-panel *) { color: #67748f; }
+html.dark .text-ink-300:not(.anim-panel *) { color: #4d5a75; }
+html.dark .text-slate-400:not(.anim-panel *) { color: #67748f; }
+html.dark .text-slate-300:not(.anim-panel *) { color: #4d5a75; }
+
+/* ---- 品牌色 ---- */
+html.dark .text-brand-700:not(.anim-panel *) { color: #8fadff; }
+html.dark .text-brand-600:not(.anim-panel *) { color: #7c9eff; }
+html.dark .text-brand-500:not(.anim-panel *) { color: #6f93ff; }
+html.dark .text-brand-800 { color: #9db4ff; }
+html.dark .bg-brand-50:not(.anim-panel *) { background-color: rgba(58, 104, 247, 0.16); }
+html.dark .bg-brand-50\/40:not(.anim-panel *) { background-color: rgba(58, 104, 247, 0.1); }
+html.dark .bg-brand-50\/70:not(.anim-panel *), html.dark .bg-brand-50\/80:not(.anim-panel *) { background-color: rgba(58, 104, 247, 0.14); }
+html.dark .border-brand-200:not(.anim-panel *) { border-color: #2c3f77; }
+html.dark .border-brand-300:not(.anim-panel *) { border-color: #34498a; }
+html.dark .border-brand-400:not(.anim-panel *) { border-color: #3d55a3; }
+html.dark .hover\:bg-slate-50:hover:not(.anim-panel *) { background-color: #182136; }
+html.dark .hover\:bg-slate-100:hover:not(.anim-panel *) { background-color: #1f2a42; }
+html.dark .hover\:border-slate-300:hover:not(.anim-panel *) { border-color: #34415f; }
+
+/* ---- 语义色（浅底色阶转暗色半透明） ---- */
+html.dark .bg-emerald-50:not(.anim-panel *) { background-color: rgba(16, 185, 129, 0.13); }
+html.dark .text-emerald-700:not(.anim-panel *) { color: #6ee7b7; }
+html.dark .text-emerald-600:not(.anim-panel *) { color: #34d399; }
+html.dark .border-emerald-200:not(.anim-panel *) { border-color: rgba(52, 211, 153, 0.32); }
+html.dark .bg-rose-50:not(.anim-panel *) { background-color: rgba(244, 63, 94, 0.13); }
+html.dark .text-rose-700:not(.anim-panel *) { color: #fda4af; }
+html.dark .text-rose-600:not(.anim-panel *) { color: #fb7185; }
+html.dark .bg-amber-50:not(.anim-panel *), html.dark .bg-amber-50\/70:not(.anim-panel *), html.dark .bg-amber-50\/80:not(.anim-panel *) { background-color: rgba(245, 158, 11, 0.12); }
+html.dark .text-amber-900:not(.anim-panel *) { color: #fcd34d; }
+html.dark .text-amber-800:not(.anim-panel *) { color: #fbbf24; }
+html.dark .text-amber-700:not(.anim-panel *) { color: #fbbf24; }
+html.dark .text-amber-600:not(.anim-panel *) { color: #fbbf24; }
+html.dark .border-amber-200:not(.anim-panel *) { border-color: rgba(251, 191, 36, 0.32); }
+html.dark .bg-violet-50:not(.anim-panel *) { background-color: rgba(139, 92, 246, 0.15); }
+html.dark .text-violet-700:not(.anim-panel *) { color: #c4b5fd; }
+html.dark .text-violet-600:not(.anim-panel *) { color: #a78bfa; }
+html.dark .bg-sky-50:not(.anim-panel *) { background-color: rgba(14, 165, 233, 0.13); }
+html.dark .text-sky-700:not(.anim-panel *) { color: #7dd3fc; }
+
+/* 检索高亮 mark：暗色下换成琥珀描边风格 */
+html.dark mark {
+  background-color: rgba(251, 191, 36, 0.24);
+  color: #fcd34d;
+}
+
+/* ---- Markdown 讲义排版 ---- */
+html.dark .md-body { color: #c6d0e2; }
+html.dark .md-body h1, html.dark .md-body h2, html.dark .md-body h3 { color: #e8edf8; }
+html.dark .md-body h4, html.dark .md-body strong { color: #dbe2f0; }
+html.dark .md-body em { color: #8fadff; }
+html.dark .md-body a { color: #8fadff; }
+html.dark .md-body code { background-color: #1a2338; color: #9db4ff; }
+html.dark .md-body blockquote { background-color: rgba(6, 182, 212, 0.08); color: #a9b4c9; }
+html.dark .md-body thead th { background-color: #131c31; border-color: #24304a; color: #a9b4c9; }
+html.dark .md-body tbody td { border-color: #1c2639; }
+html.dark .md-body tbody tr:hover { background-color: rgba(26, 35, 56, 0.7); }
+html.dark .md-body hr { border-color: #24304a; }
+html.dark .md-body img { border-color: #24304a; }
+html.dark .md-body .callout-tip {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: rgba(52, 211, 153, 0.3);
+  color: #a7f3d0;
+}
+
+/* 打印友好 */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ---- 头像框 Ⅲ 阶：光晕缓慢呼吸 ---- */
+/* 定义在全局，头像组件（UserAvatar）与衣柜预览卡共用同一套动画 */
+@keyframes frame-breathe {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.12);
+  }
+}
+.frame-breathe {
+  animation: frame-breathe 2.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frame-breathe {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   头像框材质环（FrameRing）
+   尺寸全部按 --u = size/48 缩放；--t/--tg/--tg2/--tg3 是主色与几档透明度
+   ============================================================ */
+.fring {
+  position: relative;
+  flex: none;
+  border-radius: 9999px;
+  isolation: isolate;
+}
+.fring-body {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  /* 倒角：外缘一道高光、下缘一道暗边，左右各一点方向光 —— 做出金属倒角的体积 */
+  box-shadow:
+    inset 0 calc(1px * var(--u)) calc(1.2px * var(--u)) rgba(255, 255, 255, 0.72),
+    inset 0 calc(-2px * var(--u)) calc(3px * var(--u)) rgba(0, 0, 0, 0.5),
+    inset calc(1px * var(--u)) 0 calc(2px * var(--u)) rgba(255, 255, 255, 0.25),
+    inset calc(-1px * var(--u)) 0 calc(2px * var(--u)) rgba(0, 0, 0, 0.3),
+    0 calc(1.5px * var(--u)) calc(4px * var(--u)) rgba(2, 6, 23, 0.5);
+}
+.fring-body--plain {
+  background: none;
+  box-shadow: none;
+}
+.fring-cut {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 9999px;
+  /* 内嵌暗边：头像沉进镶座 */
+  box-shadow:
+    inset 0 calc(2px * var(--u)) calc(6px * var(--u)) rgba(0, 0, 0, 0.62),
+    inset 0 calc(-1px * var(--u)) calc(2px * var(--u)) rgba(255, 255, 255, 0.14);
+}
+.fring-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+  box-shadow: 0 0 calc(16px * var(--u)) calc(4px * var(--u)) var(--tg);
+}
+/* 领环：真元素环，靠 inset 负偏移悬在环体外面，中间留一圈空气缝 */
+.fring-collar {
+  position: absolute;
+  border-style: solid;
+  border-radius: 9999px;
+  border-color: var(--t);
+  pointer-events: none;
+}
+.fring-collar.a {
+  inset: calc(-4.4px * var(--u));
+  border-width: calc(1.9px * var(--u));
+  box-shadow:
+    0 0 0 calc(0.5px * var(--u)) rgba(0, 0, 0, 0.45),
+    inset 0 calc(0.6px * var(--u)) calc(0.8px * var(--u)) rgba(255, 255, 255, 0.7),
+    inset 0 calc(-1px * var(--u)) calc(2px * var(--u)) rgba(0, 0, 0, 0.4),
+    0 0 calc(9px * var(--u)) var(--tg);
+}
+.fring[data-tier='3'] .fring-collar.a {
+  inset: calc(-4.8px * var(--u));
+  border-width: calc(2.2px * var(--u));
+  box-shadow:
+    0 0 0 calc(0.6px * var(--u)) rgba(0, 0, 0, 0.5),
+    inset 0 calc(0.7px * var(--u)) calc(1px * var(--u)) rgba(255, 255, 255, 0.9),
+    inset 0 calc(-1px * var(--u)) calc(2px * var(--u)) rgba(0, 0, 0, 0.45),
+    0 0 calc(12px * var(--u)) var(--tg2);
+}
+.fring-collar.b {
+  inset: calc(-9px * var(--u));
+  border-width: calc(1px * var(--u));
+}
+/* 静态镜面弧 + 旋转扫光：只在环带上可见 */
+.fring-arc,
+.fring-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--pad) - 1px), #000 calc(100% - var(--pad) + 1px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--pad) - 1px), #000 calc(100% - var(--pad) + 1px));
+}
+.fring-arc {
+  background: conic-gradient(
+    from 150deg,
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.9) 12deg,
+    rgba(255, 255, 255, 0.15) 26deg,
+    rgba(255, 255, 255, 0) 40deg
+  );
+}
+.fring-sweep {
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0) 0deg 30deg,
+    rgba(255, 255, 255, 0.75) 52deg,
+    rgba(255, 255, 255, 0) 74deg 205deg,
+    rgba(255, 255, 255, 0.5) 227deg,
+    rgba(255, 255, 255, 0) 249deg 360deg
+  );
+  animation: fring-spin 7.5s linear infinite;
+}
+.fring[data-tier='3'] .fring-sweep {
+  animation-duration: 4.5s;
+}
+/* 宝石钉 */
+.fring-stud {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(circle, #fff 0 34%, rgba(255, 255, 255, 0.55) 52%, rgba(255, 255, 255, 0) 78%);
+  box-shadow: 0 0 calc(3px * var(--u)) rgba(255, 255, 255, 0.9);
+}
+.fring-stud.n,
+.fring-stud.s {
+  width: calc(4px * var(--u));
+  height: calc(4px * var(--u));
+  left: 50%;
+  margin-left: calc(-2px * var(--u));
+}
+.fring-stud.e,
+.fring-stud.w {
+  width: calc(4px * var(--u));
+  height: calc(4px * var(--u));
+  top: 50%;
+  margin-top: calc(-2px * var(--u));
+}
+.fring-stud.n { top: calc(-4.5px * var(--u)); }
+.fring-stud.s { bottom: calc(-4.5px * var(--u)); }
+.fring-stud.e { right: calc(-4.5px * var(--u)); }
+.fring-stud.w { left: calc(-4.5px * var(--u)); }
+/* 星芒 */
+.fring-spark {
+  position: absolute;
+  width: calc(9px * var(--u));
+  height: calc(9px * var(--u));
+  pointer-events: none;
+  background: radial-gradient(circle, #fff 0 8%, rgba(255, 255, 255, 0.55) 26%, rgba(255, 255, 255, 0) 68%);
+  animation: fring-twinkle 2.8s ease-in-out infinite;
+}
+.fring-spark.s1 { top: calc(-6px * var(--u)); right: 4%; }
+.fring-spark.s2 { bottom: 0; left: calc(-4px * var(--u)); animation-delay: 1.4s; }
+
+@keyframes fring-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes fring-twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(0.55); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fring-sweep,
+  .fring-spark {
+    animation: none;
+  }
+}
