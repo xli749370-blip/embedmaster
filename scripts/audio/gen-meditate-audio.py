@@ -11,6 +11,9 @@ import json
 import os
 import edge_tts
 
+# 语料与脚本同目录：不依赖从哪个目录运行
+_AUDIO = os.path.dirname(os.path.abspath(__file__))
+
 VOICE = "zh-CN-XiaoxiaoNeural"
 RATE = "-4%"
 OUT_DIR = os.path.join("public", "audio", "meditate")
@@ -27,7 +30,7 @@ async def gen_one(piece: dict) -> dict:
 
 async def main():
     os.makedirs(OUT_DIR, exist_ok=True)
-    with open("meditate-scripts.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(_AUDIO, "meditate-scripts.json"), "r", encoding="utf-8") as f:
         pieces = json.load(f)
     print(f"共 {len(pieces)} 篇，开始合成（音色 {VOICE}）...")
     entries = []

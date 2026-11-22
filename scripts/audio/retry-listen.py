@@ -9,6 +9,9 @@ import sys
 import edge_tts
 import imageio_ffmpeg
 
+# 语料与脚本同目录：不依赖从哪个目录运行
+_AUDIO = os.path.dirname(os.path.abspath(__file__))
+
 VOICE = "zh-CN-YunjianNeural"
 RATE = "+0%"
 OUT_DIR = os.path.join("public", "audio", "listen")
@@ -84,7 +87,7 @@ async def by_parts(item):
 
 async def main():
     ids = sys.argv[1:]
-    with open("listen-scripts.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(_AUDIO, "listen-scripts.json"), "r", encoding="utf-8") as f:
         allitems = {i["id"]: i for i in json.load(f)}
     for i in ids:
         it = allitems[i]

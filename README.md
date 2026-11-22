@@ -128,11 +128,17 @@ npm run type-check   # vue-tsc 类型检查
 │  └─ utils/          # 存储、报告生成等工具
 ├─ public/            # 静态资源（img / 图标 / manifest / sw.js；音频见下文）
 ├─ docs/screenshots/  # README 展示图
-├─ verify-*.mjs       # 页面巡检脚本（Puppeteer）
-├─ audit-*.mjs        # 电路图 / 标签一致性审计
-├─ gen-*.py           # 音频生成脚本（edge-tts）
-└─ export-*.mjs       # 由正文导出讲稿（供音频生成使用）
+└─ scripts/           # 全部工程脚本，均在项目根目录运行
+   ├─ verify/         # 页面巡检（Puppeteer）：全站 BFS、定向路由、头像框、听学
+   ├─ audit/          # 电路图 / 标签一致性审计
+   ├─ audio/          # 音频生成链（edge-tts）+ 导出的朗读稿 JSON
+   ├─ shots/          # 截图与头像框对照图出图
+   ├─ assets/         # 应用图标 / 二维码生成
+   ├─ legacy/         # 早期一次性校验脚本（依赖已删除的中间产物，仅作参考）
+   └─ server.mjs      # 本地静态预览服务
 ```
+
+脚本内部对朗读稿等资源的路径按**脚本自身位置**解析，因此只需要在项目根目录执行命令；若换了目录执行，`public/…` 这类相对路径仍以当前目录为基准，会找不到产物。
 
 ---
 
@@ -169,13 +175,13 @@ npm run type-check   # vue-tsc 类型检查
 
 ```bash
 pip install edge-tts            # 另需 ffmpeg（必须带 libmp3lame）
-node export-listen.mjs          # 由正文导出讲稿 → listen-scripts.json
-python gen-listen-audio2.py     # 分块合成 → public/audio/listen/*.mp3 + manifest.json
-python listen-fixup.py          # 统一转 32kbps 单声道并重建 manifest
-node check-listen.mjs           # 校验时长与文本是否对得上
+node scripts/audio/export-listen.mjs       # 由正文导出讲稿 → scripts/audio/listen-scripts.json
+python scripts/audio/gen-listen-audio2.py  # 分块合成 → public/audio/listen/*.mp3 + manifest.json
+python scripts/audio/listen-fixup.py       # 统一转 32kbps 单声道并重建 manifest
+node scripts/verify/check-listen.mjs       # 校验时长与文本是否对得上
 ```
 
-其他同类脚本：`gen-learn-audio.py`（讲义）、`gen-meditate-audio.py`（心法）、`gen-project-audio.py`（工程）、`audio-validate.py`（完整性）。
+其他同类脚本：`gen-learn-audio.py`（讲义）、`gen-meditate-audio.py`（心法）、`gen-project-audio.py`（工程）、`audio-validate.py`（完整性），均在 `scripts/audio/`。
 
 **两个踩过的坑，供复用者避开**：
 
@@ -219,12 +225,16 @@ npm run build
 仓库带一组 Puppeteer 巡检脚本（需本机 Chrome，路径写在脚本顶部）：
 
 ```bash
-node server.mjs                      # 起一个本地静态服务预览 dist/
-node verify-all-pages.mjs            # BFS 遍历全站 66 条路由，查白屏 / 报错
-node verify-key-pages.mjs            # 71 条定向路由（章节、课程、理论轨道…）
-node verify-frames.mjs               # 成就与头像框：24 项、每框 3 项、Ⅰ/Ⅱ/Ⅲ 领环结构
-node audit-circuits.mjs              # 电路图元件与标注一致性
+node scripts/server.mjs                          # 起一个本地静态服务预览 dist/
+node scripts/verify/verify-all-pages.mjs         # BFS 遍历全站 66 条路由，查白屏 / 报错
+node scripts/verify/verify-key-pages.mjs         # 71 条定向路由（章节、课程、理论轨道…）
+node scripts/verify/verify-frames.mjs            # 成就与头像框：24 项、每框 3 项、Ⅰ/Ⅱ/Ⅲ 领环结构
+node scripts/audit/audit-circuits.mjs            # 电路图元件与标注一致性
 ```
+
+`verify-*.mjs` 支持把目标地址或目录作为第一个参数 / 环境变量传入，例如巡检线上环境：
+`node scripts/verify/verify-frames.mjs "https://<your-site>/?sharecode=xxxx"`、
+`ROOT_DIR=dist-v2 node scripts/verify/verify-all-pages.mjs`（需脚本内 `PORT` 对应的静态服务已启动）。
 
 当前状态：类型检查 0 错误，全站巡检 0 异常，头像框专项 16/16。
 
@@ -244,7 +254,7 @@ node audit-circuits.mjs              # 电路图元件与标注一致性
 
 欢迎 Issue / PR。内容勘误（电路参数、代码笔误、讲义表述）尤其欢迎，请附上来源或推导过程。
 
-改动前建议先跑一遍 `npm run type-check` 与 `node verify-all-pages.mjs`。
+改动前建议先跑一遍 `npm run type-check` 与 `node scripts/verify/verify-all-pages.mjs`。
 
 ---
 

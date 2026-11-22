@@ -15,7 +15,8 @@
  * 运行：node check-listen.mjs
  */
 import { readFileSync, existsSync, statSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const CPM_MIN = 250 // 字/分，过慢
 const CPM_MAX = 365 // 字/分，过快（超过说明有内容没念到）
@@ -23,7 +24,8 @@ const CPM_HARD = 380 // 硬线：超过必然截断
 
 const ROOT = process.cwd()
 const PUB = join(ROOT, 'public')
-const scripts = JSON.parse(readFileSync(join(ROOT, 'listen-scripts.json'), 'utf8'))
+const AUDIO_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'audio')
+const scripts = JSON.parse(readFileSync(join(AUDIO_DIR, 'listen-scripts.json'), 'utf8'))
 const byId = new Map(scripts.map((s) => [s.id, s]))
 const manifest = JSON.parse(readFileSync(join(PUB, 'audio', 'listen', 'manifest.json'), 'utf8'))
 const rows = manifest.entries

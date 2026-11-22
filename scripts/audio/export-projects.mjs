@@ -51,5 +51,5 @@ for (const p of projects) {
   }
 }
 
-writeFileSync('project-speech.json', JSON.stringify(out, null, 1), 'utf8')
+writeFileSync(new URL('./project-speech.json', import.meta.url), JSON.stringify(out, null, 1), 'utf8')
 console.log(`共 ${projects.length} 个项目 / ${out.length} 个阶段，朗读文本 ${totalChars} 字（约 ${Math.round(totalChars / 4 / 60)} 分钟音频）`)

@@ -10,13 +10,16 @@ import json
 import os
 import edge_tts
 
+# 语料与脚本同目录：不依赖从哪个目录运行
+_AUDIO = os.path.dirname(os.path.abspath(__file__))
+
 VOICE = "zh-CN-YunjianNeural"
 RATE = "+4%"
 
 JOBS = [
-    ("learn-speech.json", os.path.join("public", "audio", "learn"),
+    (os.path.join(_AUDIO, "learn-speech.json"), os.path.join("public", "audio", "learn"),
      lambda it: (f"{it['course']}-{it['id']}.mp3", it["text"])),
-    ("project-speech.json", os.path.join("public", "audio", "proj"),
+    (os.path.join(_AUDIO, "project-speech.json"), os.path.join("public", "audio", "proj"),
      lambda it: (f"{it['projectId']}-{it['stageId']}.mp3", it["text"])),
 ]
 

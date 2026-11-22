@@ -52,6 +52,6 @@ for (const c of courses) {
   }
 }
 
-writeFileSync('learn-speech.json', JSON.stringify(out, null, 1), 'utf8')
+writeFileSync(new URL('./learn-speech.json', import.meta.url), JSON.stringify(out, null, 1), 'utf8')
 console.log(`共 ${out.length} 节，朗读文本 ${totalChars} 字（约 ${Math.round(totalChars / 4 / 60)} 分钟音频）`)
 for (const c of courses) console.log(`  ${c.id}: ${c.sections.length} 节`)

@@ -1,9 +1,12 @@
 // 静态文件服务：供线上发布使用（监听 PORT 环境变量，绑定 0.0.0.0）
 import http from 'node:http'
 import { createReadStream, existsSync, statSync } from 'node:fs'
-import { join, extname, normalize } from 'node:path'
+import { join, extname, normalize, isAbsolute } from 'node:path'
 
-const ROOT = join(import.meta.dirname, process.env.SITE_DIR || 'site')
+// 脚本位于 scripts/，站点目录相对**项目根**解析（也接受绝对路径）
+const PROJECT_ROOT = join(import.meta.dirname, '..')
+const siteArg = process.env.SITE_DIR || 'site'
+const ROOT = isAbsolute(siteArg) ? siteArg : join(PROJECT_ROOT, siteArg)
 const PORT = Number(process.env.PORT || 3000)
 const HOST = '0.0.0.0'
 

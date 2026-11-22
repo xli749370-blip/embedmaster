@@ -386,7 +386,7 @@ for (const it of items) {
   byChannel[it.channel].chars += it.chars
   byChannel[it.channel].minutes += it.minutes
 }
-writeFileSync('listen-scripts.json', JSON.stringify(items, null, 1), 'utf-8')
+writeFileSync(new URL('./listen-scripts.json', import.meta.url), JSON.stringify(items, null, 1), 'utf-8')
 
 console.log('频道统计：')
 for (const [k, v] of Object.entries(byChannel)) {

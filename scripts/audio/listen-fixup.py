@@ -20,8 +20,11 @@ import shutil
 import subprocess
 import sys
 
+# 语料与脚本同目录：不依赖从哪个目录运行
+_AUDIO = os.path.dirname(os.path.abspath(__file__))
+
 OUT_DIR = os.path.join("public", "audio", "listen")
-SRC = "listen-scripts.json"
+SRC = os.path.join(_AUDIO, "listen-scripts.json")
 ARCHIVE = os.path.join("..", "emb-archive", "listen-48k")
 BITRATE = "32k"
 SAMPLE_RATE = "24000"

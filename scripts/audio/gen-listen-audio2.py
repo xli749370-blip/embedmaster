@@ -30,10 +30,13 @@ import sys
 
 import edge_tts
 
+# 语料与脚本同目录：不依赖从哪个目录运行
+_AUDIO = os.path.dirname(os.path.abspath(__file__))
+
 VOICE = "zh-CN-YunjianNeural"
 RATE = "+0%"
 OUT_DIR = os.path.join("public", "audio", "listen")
-SRC = "listen-scripts.json"
+SRC = os.path.join(_AUDIO, "listen-scripts.json")
 CHUNK_MAX = 420          # 单块最大字数
 MIN_BYTES = 4096
 CONCURRENCY = 6
